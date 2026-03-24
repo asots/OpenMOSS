@@ -8,6 +8,8 @@ import ecommerce from './scenarios/ecommerce.json'
 import devTeam from './scenarios/dev-team.json'
 import researchLab from './scenarios/research-lab.json'
 import chaos from './scenarios/chaos.json'
+import mcnStudio from './scenarios/mcn-studio.json'
+import crossBorder from './scenarios/cross-border.json'
 
 const origMap: Record<string, AgentDef[]> = {
   'content-company': (contentCompany as any).agents,
@@ -15,6 +17,8 @@ const origMap: Record<string, AgentDef[]> = {
   'dev-team': (devTeam as any).agents,
   'research-lab': (researchLab as any).agents,
   'chaos': (chaos as any).agents,
+  'mcn-studio': (mcnStudio as any).agents,
+  'cross-border': (crossBorder as any).agents,
 }
 
 function getOriginalAgents(scenarioId: string): AgentDef[] | undefined {
@@ -31,7 +35,7 @@ export function useScenarioPlayer() {
 
   const scenario = ref<ScenarioData | null>(null)
   const playing = ref(false)
-  const speed = ref(0.5)       // 0.5x / 1x / 2x / 3x
+  const speed = ref(0.25)       // 0.1x / 0.25x / 0.5x / 1x / 2x / 3x
   const elapsed = ref(0)       // 已播放秒数
 
   let eventIndex = 0
@@ -114,12 +118,18 @@ export function useScenarioPlayer() {
         eventIndex++
       }
 
-      // 播放完毕
+      // 播放完毕 — 停止计时器，延迟切 result（让飘分/撒花动画播完）
       if (eventIndex >= events.length) {
-        pause()
-        // 如果最后一个事件不是 summary，自动触发 result phase
+        playing.value = false
+        if (timer) { clearInterval(timer); timer = null }
+        // summary 事件已经设了 phase='result'，无需再设
+        // 兜底：如果 JSON 没有 summary 事件，2s 后强制切 result
         if (store.state.phase !== 'result') {
-          store.state.phase = 'result'
+          setTimeout(() => {
+            if (store.state.phase !== 'result') {
+              store.state.phase = 'result'
+            }
+          }, 2000)
         }
       }
     }, 100)

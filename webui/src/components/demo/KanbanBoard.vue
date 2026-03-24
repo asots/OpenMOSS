@@ -7,10 +7,10 @@ const store = useSimulationStore()
 const kanbanRef = ref<HTMLElement | null>(null)
 
 const columns = [
-  { key: 'pending', label: '📋 待分配', color: '#94a3b8' },
-  { key: 'working', label: '⚡ 执行中', color: '#38BDF8' },
-  { key: 'review', label: '🔍 审查中', color: '#FBBF24' },
-  { key: 'done', label: '✅ 已完成', color: '#4ADE80' },
+  { key: 'pending', label: '📋 待分配', color: '#8C8A84' },
+  { key: 'working', label: '⚡ 执行中', color: '#4A7FA5' },
+  { key: 'review', label: '🔍 审查中', color: '#C09840' },
+  { key: 'done', label: '✅ 已完成', color: '#4A7A5E' },
 ]
 
 // 合并 assigned→pending, rework→working 以简化显示
@@ -121,7 +121,7 @@ onUnmounted(() => window.removeEventListener('resize', handleResize))
       >
         <path
           :d="arrowPath"
-          stroke="#F87171"
+          stroke="#A05252"
           stroke-width="2.5"
           stroke-dasharray="6 4"
           fill="none"
@@ -132,17 +132,17 @@ onUnmounted(() => window.removeEventListener('resize', handleResize))
           :cx="arrowPath.split(' ').slice(-2, -1)[0]"
           :cy="arrowPath.split(' ').slice(-1)[0]"
           r="4"
-          fill="#F87171"
+          fill="#A05252"
         />
         <!-- 标签 -->
         <text
           :x="Number(arrowViewBox.split(' ')[2]) / 2"
           :y="20"
           text-anchor="middle"
-          fill="#F87171"
+          fill="#A05252"
           font-size="11"
           font-weight="700"
-          font-family="Nunito, sans-serif"
+          font-family="Instrument Sans, sans-serif"
         >🔄 返工</text>
       </svg>
     </Transition>

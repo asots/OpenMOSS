@@ -28,7 +28,7 @@ watch(
       const isPositive = e.delta > 0
       const item: FloatItem = {
         id: `f-${++floatId}`,
-        text: isPositive ? `+${e.delta} ⭐` : `${e.delta} 💔`,
+        text: isPositive ? `+${e.delta} ↑` : `${e.delta} ↓`,
         color: isPositive ? '#4A7A5E' : '#A05252',
         x: 30 + Math.random() * 40, // 随机水平位置 (30%-70%)
       }
@@ -43,7 +43,7 @@ watch(
           particleCount: 40,
           spread: 60,
           origin: { x: 0.5, y: 0.7 },
-          colors: ['#818CF8', '#4ADE80', '#FBBF24', '#F472B6'],
+          colors: ['#8B6F4E', '#4A7A5E', '#C09840', '#4A7FA5'],
           gravity: 0.8,
           scalar: 0.8,
         })
@@ -56,7 +56,7 @@ watch(
         particleCount: 30,
         spread: 50,
         origin: { x: 0.5, y: 0.6 },
-        colors: ['#4ADE80', '#34D399', '#6EE7B7'],
+        colors: ['#4A7A5E', '#8B6F4E', '#C09840'],
         gravity: 0.9,
         scalar: 0.7,
       })

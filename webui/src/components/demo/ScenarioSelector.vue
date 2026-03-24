@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ScenarioData } from '@/composables/demo/types'
-import { Newspaper, ShoppingCart, Code, Megaphone, ShieldAlert } from 'lucide-vue-next'
+import { Newspaper, ShoppingCart, Code, Megaphone, ShieldAlert, Clapperboard, Globe } from 'lucide-vue-next'
 import { markRaw, type Component } from 'vue'
 
 import contentCompany from '@/composables/demo/scenarios/content-company.json'
@@ -8,8 +8,11 @@ import ecommerce from '@/composables/demo/scenarios/ecommerce.json'
 import devTeam from '@/composables/demo/scenarios/dev-team.json'
 import researchLab from '@/composables/demo/scenarios/research-lab.json'
 import chaos from '@/composables/demo/scenarios/chaos.json'
+import mcnStudio from '@/composables/demo/scenarios/mcn-studio.json'
+import crossBorder from '@/composables/demo/scenarios/cross-border.json'
 
-const contentGroup = [contentCompany, ecommerce, researchLab] as unknown as ScenarioData[]
+const contentGroup = [contentCompany, mcnStudio, researchLab] as unknown as ScenarioData[]
+const commerceGroup = [ecommerce, crossBorder] as unknown as ScenarioData[]
 const techGroup = [devTeam] as unknown as ScenarioData[]
 const systemGroup = [chaos] as unknown as ScenarioData[]
 
@@ -19,6 +22,8 @@ const iconMap: Record<string, Component> = {
   Code: markRaw(Code),
   Megaphone: markRaw(Megaphone),
   ShieldAlert: markRaw(ShieldAlert),
+  Clapperboard: markRaw(Clapperboard),
+  Globe: markRaw(Globe),
 }
 
 const emit = defineEmits<{
@@ -60,6 +65,29 @@ const emit = defineEmits<{
       </div>
     </div>
 
+    <div class="scenario-group">
+      <h3 class="group-label">电商 & 出海</h3>
+      <div class="scenario-grid scenario-grid--2">
+        <button
+          v-for="(s, i) in commerceGroup"
+          :key="s.id"
+          class="scenario-card"
+          :class="`scenario-card--${s.id}`"
+          :style="{ animationDelay: `${0.18 + i * 0.06}s` }"
+          @click="emit('select', s)"
+        >
+          <div class="scenario-icon-wrap">
+            <component :is="iconMap[s.icon]" :size="28" :stroke-width="1.5" />
+          </div>
+          <h3 class="scenario-name">{{ s.name }}</h3>
+          <p class="scenario-desc">{{ s.description }}</p>
+          <span class="scenario-meta">
+            {{ s.agents.length }} 个 AI 员工 · {{ s.duration }}s
+          </span>
+        </button>
+      </div>
+    </div>
+
     <div class="scenario-row">
       <div class="scenario-group scenario-group--half">
         <h3 class="group-label">技术 & 开发</h3>
@@ -69,7 +97,7 @@ const emit = defineEmits<{
             :key="s.id"
             class="scenario-card"
             :class="`scenario-card--${s.id}`"
-            :style="{ animationDelay: '0.18s' }"
+            :style="{ animationDelay: '0.30s' }"
             @click="emit('select', s)"
           >
             <div class="scenario-icon-wrap">
@@ -92,7 +120,7 @@ const emit = defineEmits<{
             :key="s.id"
             class="scenario-card"
             :class="`scenario-card--${s.id}`"
-            :style="{ animationDelay: '0.24s' }"
+            :style="{ animationDelay: '0.36s' }"
             @click="emit('select', s)"
           >
             <div class="scenario-icon-wrap">
@@ -152,6 +180,10 @@ const emit = defineEmits<{
 
 .scenario-grid--3 {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.scenario-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .scenario-grid--1 {
@@ -269,7 +301,8 @@ const emit = defineEmits<{
 }
 
 @media (max-width: 480px) {
-  .scenario-grid--3 {
+  .scenario-grid--3,
+  .scenario-grid--2 {
     grid-template-columns: 1fr;
   }
   .scenario-card {

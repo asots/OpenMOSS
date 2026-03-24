@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
 import type { ScenarioData, AgentDef } from '@/composables/demo/types'
+import chaosScenario from '@/composables/demo/scenarios/chaos.json'
 import { useScenarioPlayer, useSimulationStore } from '@/composables/demo'
 import ScenarioSelector from '@/components/demo/ScenarioSelector.vue'
 import TeamPreview from '@/components/demo/TeamPreview.vue'
@@ -58,10 +59,23 @@ function goBack() {
 }
 
 function restart() {
+  player.restart()
+  phase.value = 'simulation'
+}
+
+function onReselect() {
   player.stop()
   store.reset()
   phase.value = 'select'
   selectedScenario.value = null
+}
+
+function onChaos() {
+  const data = chaosScenario as unknown as ScenarioData
+  selectedScenario.value = data
+  player.load(data)
+  phase.value = 'simulation'
+  player.play()
 }
 
 function togglePlay() {
@@ -72,11 +86,11 @@ function togglePlay() {
   }
 }
 
-function cycleSpeed() {
-  const speeds = [0.5, 1, 2, 3]
-  const idx = speeds.indexOf(player.speed.value)
-  const next = speeds[(idx + 1) % speeds.length] ?? 0.5
-  player.setSpeed(next)
+const speeds = [0.1, 0.25, 0.5, 1, 2, 3]
+
+function onSpeedChange(e: Event) {
+  const val = parseFloat((e.target as HTMLSelectElement).value)
+  player.setSpeed(val)
 }
 
 function scrollToDemo() {
@@ -119,14 +133,16 @@ function scrollToDemo() {
         </div>
 
         <!-- Phase 3: 工作流模拟 -->
-        <div v-else-if="phase === 'simulation'" key="simulation" class="demo-phase">
+        <div v-else-if="phase === 'simulation'" key="simulation" class="demo-phase demo-phase--sim">
           <div class="sim-header">
             <h2 class="phase-title">AI 团队工作中...</h2>
             <div class="sim-controls">
               <button class="ctrl-btn" @click="togglePlay">
                 {{ player.playing.value ? '⏸️' : '▶️' }}
               </button>
-              <button class="ctrl-btn" @click="cycleSpeed">{{ player.speed.value }}x</button>
+              <select class="speed-select" :value="player.speed.value" @change="onSpeedChange">
+                <option v-for="s in speeds" :key="s" :value="s">{{ s }}x</option>
+              </select>
               <button class="ctrl-btn" @click="restart">🔄</button>
             </div>
           </div>
@@ -151,7 +167,7 @@ function scrollToDemo() {
 
         <!-- Phase 4: 结果页 -->
         <div v-else-if="phase === 'result'" key="result" class="demo-phase">
-          <ResultPage @restart="restart" />
+          <ResultPage @restart="restart" @chaos="onChaos" @reselect="onReselect" />
         </div>
       </Transition>
     </main>
@@ -243,6 +259,10 @@ function scrollToDemo() {
 
 .demo-phase {
   min-height: 200px;
+}
+
+.demo-phase--sim {
+  padding-top: 24px;
 }
 
 .phase-title {
@@ -339,6 +359,26 @@ function scrollToDemo() {
   background: var(--demo-tag-bg);
 }
 
+.speed-select {
+  background: var(--demo-surface);
+  border: 1px solid var(--demo-border);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--demo-text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+}
+
+.speed-select:hover,
+.speed-select:focus {
+  border-color: var(--demo-text2);
+  color: var(--demo-text);
+}
+
 .progress-bar {
   width: 100%;
   height: 3px;
@@ -417,9 +457,11 @@ function scrollToDemo() {
   .demo-main {
     padding: 0 20px 40px;
   }
+
   .phase-title {
     font-size: 1.15rem;
   }
+
   .sim-header {
     flex-direction: column;
     gap: 0.75rem;
@@ -431,9 +473,11 @@ function scrollToDemo() {
   .demo-main {
     padding: 0 16px 32px;
   }
+
   .phase-title {
     font-size: 1.05rem;
   }
+
   .phase-desc {
     font-size: 0.85rem;
   }

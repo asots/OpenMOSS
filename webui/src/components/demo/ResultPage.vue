@@ -2,9 +2,12 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useSimulationStore } from '@/composables/demo/useSimulationStore'
 import { ROLE_COLORS } from '@/composables/demo/types'
+import { RotateCcw, ShieldAlert, LayoutGrid, Rocket } from 'lucide-vue-next'
 
 const emit = defineEmits<{
   restart: []
+  chaos: []
+  reselect: []
 }>()
 
 const store = useSimulationStore()
@@ -111,16 +114,26 @@ function getAgentComment(agent: { score: number; role: string; name: string }): 
 
     <!-- CTA -->
     <div class="cta-section">
+      <button class="cta-btn cta-btn--ghost" @click="emit('restart')">
+        <RotateCcw :size="15" :stroke-width="2" />
+        再看一次
+      </button>
+      <button class="cta-btn cta-btn--ghost cta-btn--danger" @click="emit('chaos')">
+        <ShieldAlert :size="15" :stroke-width="2" />
+        搞点问题
+      </button>
+      <button class="cta-btn cta-btn--secondary" @click="emit('reselect')">
+        <LayoutGrid :size="15" :stroke-width="2" />
+        再试一个场景
+      </button>
       <a
         href="https://github.com/uluckyXH/OpenMOSS"
         target="_blank"
         class="cta-btn cta-btn--primary"
       >
-        🚀 部署你自己的 AI 公司
+        <Rocket :size="15" :stroke-width="2" />
+        部署你的 AI 公司
       </a>
-      <button class="cta-btn cta-btn--secondary" @click="emit('restart')">
-        🔄 再试一个场景
-      </button>
     </div>
   </div>
 </template>
@@ -128,6 +141,7 @@ function getAgentComment(agent: { score: number; role: string; name: string }): 
 <style scoped>
 .result-page {
   animation: fadeIn 0.5s ease;
+  padding-top: 32px;
 }
 
 .result-title {
@@ -302,24 +316,59 @@ function getAgentComment(agent: { score: number; role: string; name: string }): 
 }
 
 .cta-section {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 .cta-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 10px 22px;
-  font-size: 0.9rem;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 18px;
+  height: 44px;
+  font-size: 0.85rem;
   font-weight: 600;
   font-family: 'Instrument Sans', sans-serif;
   border-radius: 7px;
   cursor: pointer;
   transition: all 0.15s;
   text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.cta-btn--ghost {
+  background: none;
+  color: #4A4845;
+  border: 1px solid #E8E6E0;
+}
+.cta-btn--ghost:hover {
+  background: #F5F4F0;
+  border-color: #D4D0C8;
+  color: #1A1917;
+}
+
+.cta-btn--danger {
+  color: #A05252;
+  border-color: #E8D0D0;
+}
+.cta-btn--danger:hover {
+  background: #FBF5F5;
+  border-color: #A05252;
+}
+
+.cta-btn--secondary {
+  background: #FFFFFF;
+  color: #4A4845;
+  border: 1px solid #D4D0C8;
+}
+.cta-btn--secondary:hover {
+  border-color: #4A4845;
+  color: #1A1917;
+  background: #F5F4F0;
 }
 
 .cta-btn--primary {
@@ -332,17 +381,6 @@ function getAgentComment(agent: { score: number; role: string; name: string }): 
   background: #2e2b27;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.12);
-}
-
-.cta-btn--secondary {
-  background: #FFFFFF;
-  color: #4A4845;
-  border: 1px solid #D4D0C8;
-}
-.cta-btn--secondary:hover {
-  border-color: #4A4845;
-  color: #1A1917;
-  background: #F5F4F0;
 }
 
 @keyframes fadeIn {
@@ -374,13 +412,8 @@ function getAgentComment(agent: { score: number; role: string; name: string }): 
   .agent-result-card {
     flex: 1 1 100%;
   }
-  .result-actions {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .result-actions .btn {
-    width: 100%;
-    justify-content: center;
+  .cta-section {
+    grid-template-columns: 1fr;
   }
   .time-saved {
     padding: 0.6rem 1rem;

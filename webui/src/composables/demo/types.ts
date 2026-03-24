@@ -28,10 +28,10 @@ export const AGENT_EMOJI: Record<AgentStatus, string> = {
 
 /** Agent 角色色卡 */
 export const ROLE_COLORS: Record<AgentRole, string> = {
-  planner: '#818CF8',   // 淡紫
-  executor: '#38BDF8',  // 天蓝
-  reviewer: '#FBBF24',  // 金黄
-  patrol: '#34D399',    // 薄荷绿
+  planner: '#8B6F4E',   // 棕褐
+  executor: '#4A7FA5',  // 沉蓝
+  reviewer: '#C09840',  // 暗金
+  patrol: '#4A7A5E',    // 深绿
 }
 
 // ─── 场景定义 ───────────────────────────────

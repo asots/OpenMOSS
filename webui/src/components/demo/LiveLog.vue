@@ -142,7 +142,7 @@ function getDisplayText(entry: TimelineEntry): string {
   border: 1px solid #E8E6E0;
   border-radius: 10px;
   padding: 1rem;
-  max-height: 280px;
+  max-height: 380px;
   overflow-y: auto;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
